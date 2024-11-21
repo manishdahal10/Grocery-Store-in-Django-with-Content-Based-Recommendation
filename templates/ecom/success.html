@@ -1,0 +1,27 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sign Up Successful</title>
+    <style>
+      .success {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    {% include "ecom/navbar.html" %}
+    <div class="container">
+      <h1 style="text-align: center">Sign Up Successful</h1>
+      <p class="success">{{ message }}</p>
+      <p>You will be redirected to the login page shortly.</p>
+      <script>
+        setTimeout(function () {
+          window.location.href = "{% url 'customerlogin' %}";
+        }, 3000); // Redirect after 3 seconds
+      </script>
+    </div>
+  </body>
+  {% include "ecom/footer.html" %}
+</html>

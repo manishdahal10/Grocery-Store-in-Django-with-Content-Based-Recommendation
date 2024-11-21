@@ -1,0 +1,86 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<!--  Bootstrap and jQuery dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<br><br><br><br><br><br><br>
+<div class="container">
+    <header class="card-header" style="text-align:center; font-size: 21px"> Delivered Orders (History) </header>
+    <article class="card mt-4">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Username</th>
+                        <th>Order Date</th>
+                        <th>Shipping Address</th>
+                        <th>Details</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_items, customer, order in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ order.customer.user }}</td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.address }}</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#orderModal{{ order.id }}">
+                                View
+                            </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="orderModalLabel{{ order.id }}">Order #{{ order.id }} Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><strong>Customer Name:</strong> {{ order.customer.get_name }}</p>
+                                            <p><strong>Customer Address:</strong> {{ order.customer.address }}</p>
+                                            <p><strong>Order Date:</strong> {{ order.order_date }}</p>
+                                            <p><strong>Total Amount:</strong> ${{ order.total_amount }}</p>
+                                            <hr>
+                                            <h5>Ordered Items:</h5>
+                                            <ul>
+                                                {% for item in order_items %}
+                                                <li>{{ item.product.name }} (x{{ item.quantity }}) - ${{ item.product.price }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{% url 'update-order' order.id %}">
+                                <span class="glyphicon glyphicon-edit"></span> Update
+                            </a>
+                            <a class="btn btn-danger btn-sm" href="{% url 'delete-order' order.id %}">
+                                <span class="glyphicon glyphicon-trash"></span> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</div>
+{% endblock content %}
+
+
+

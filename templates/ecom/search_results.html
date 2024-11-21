@@ -1,0 +1,110 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* CSS for search results page */
+    {% comment %} .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    } {% endcomment %}
+
+    h2 {
+        text-align: center;
+        font-size: 2em;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .products {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 20px;
+    }
+
+    .product {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 250px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .product:hover {
+        transform: translateY(-5px);
+    }
+
+    .product img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .product h3 {
+        font-size: 1.5em;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    .product-price {
+        font-size: 1.2em;
+        color: #27ae60;
+        margin-bottom: 15px;
+    }
+
+    .product a {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .product a:hover {
+        background-color: #2980b9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .products {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product {
+            width: 90%;
+        }
+    }
+</style>
+
+<div class="container">
+    
+
+    <h2>Search Results for "{{ query }}"</h2>
+
+    {% if products %}
+        <div class="products">
+            {% for product in products %}
+                <div class="product">
+                    <img src="/{{ product.product_image }}" alt="{{ product.name }}">
+                    <h3>{{ product.name }}</h3>
+                    <p class="product-price">Rs {{ product.price }}</p>
+                    <a href="{% url 'product_detail' id=product.id %}">View Product</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products found matching your search criteria.</p>
+    {% endif %}
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock content %}

@@ -1,0 +1,62 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+<br>
+{% comment %} {%include 'ecom/admin_dashboard_cards.html'%} {% endcomment %}
+<br><br><br>
+
+{% comment %} <hr><hr> {% endcomment %}
+
+
+<div class="container">
+    <header class="card-header" style="text-align:center; font-size: 21px"> Admin Dashboard </header>
+    <div class="row">
+        <!-- Cards for counts -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Customers</h5>
+                    <p>{{ customercount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Products</h5>
+                    <p>{{ productcount }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Orders</h5>
+                    <p>{{ ordercount }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <article class="card mt-4">
+        <div class="card-body">
+            <h4>Recent Orders</h4>
+            <ul class="list-group">
+                {% for order_items, customer, order in data %}
+                <li class="list-group-item">
+                    <h5>Order-{{ order.id }} - {{ customer }}</h5>
+                    <p><strong>Status:</strong> {{ order.status }}</p>
+                    <p><strong>Total Amount:</strong> Rs {{ order.total_amount }}</p>
+                    <ul>
+                        {% for item in order_items %}
+                        <li>{{ item.product.name }} (x{{ item.quantity }}) - Rs {{ item.product.price }}</li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'update_order_view' order.id %}" class="btn btn-primary">Update</a>
+                    <a href="{% url 'delete_order_view' order.id %}" class="btn btn-danger">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </article>
+</div>
+{% endblock content %}

@@ -1,0 +1,474 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+{% block content %}
+<style>
+   .containerbelownav {
+        display: flex;
+        gap: 70px;
+        margin: 10px auto;
+        max-width: 1200px;
+        padding: 20px;
+    }
+
+    .sidebar {
+        width: 1000px;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        min-height: 400px;
+    }
+
+    .sidebar h2 {
+        font-size: 1.8em;
+        color: #8393a3;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .sidebar ul li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar ul li a {
+        text-decoration: none;
+        color: #28a745;
+        font-weight: bold;
+        flex-grow: 1;
+    }
+
+    .sidebar ul li img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    /* Image slider styles */
+    .image-slider {
+        flex-grow: 1;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        height: 400px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .slider-wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+    }
+
+    .slider-item {
+        flex: 1;
+        min-width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .slider-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+    .categories {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .categories h2 {
+        font-size: 2em;
+        margin-bottom: 10px;
+        text-align: left;
+        font-size: 2em;
+    color: #041730;
+    font-weight: bold;
+    text-transform: capitalize; /* Capitalize only the first letter of each word */
+
+    }
+
+    .products-container {
+        position: relative;
+    }
+
+    .products {
+        display: flex;
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        padding: 10px 0;
+        gap: 5px;
+        scroll-behavior: smooth;
+       
+
+
+    }
+
+    .product {
+        background: #fff;
+        border-radius: 10px;
+     
+        padding: 15px;
+        min-width: 200px;
+        text-align: center;
+        flex-shrink: 0;
+        width: 250px;
+    }
+
+  .product img {
+    width: 100%;           /* Ensures the image takes up the full width of the container */
+    height: 180px;         /* Set a consistent height */
+    object-fit: contain;   /* Show the full image while preserving its aspect ratio */
+    border-radius: 5px;    /* Rounded corners for a nicer look */
+    cursor: pointer;
+    background-color: #f9f9f9;  /* Add a background color to fill the extra space */
+    margin-bottom: 10px;   /* Add space below the image */
+}
+
+    .product h3 {
+        font-size: 1.2em;
+        margin: 10px 0;
+        cursor: pointer;
+    }
+
+    .product-price {
+        font-size: 1.2em;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+
+    .cart-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .quantity-selector button {
+        padding: 5px 10px;
+        background-color: #28a745; /* Change blue to green */
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .quantity-selector input {
+        width: 50px;
+        text-align: center;
+        font-size: 1.1em;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+    }
+
+    .add-to-cart {
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        width: 100%;
+    }
+
+    .add-to-cart:hover {
+        background-color: #218838;
+    }
+    .full-width-form {
+    width: 100%;
+    display: block;
+}
+
+    /* View All button styling */
+    .view-all {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        height: 180px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .view-all-link {
+        text-decoration: none;
+        font-size: 1.1em;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .view-all-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Arrows for horizontal scrolling */
+    .prev-arrow,
+    .next-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color:  #8393a3/* Changed arrow color */
+        color: white;
+        border: none;
+        font-size: 2em;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+    }
+
+    .prev-arrow {
+        left: -30px;
+    }
+
+    .next-arrow {
+        right: -30px;
+    }
+    /* Styling for category section */
+ .category-section {
+      {% comment %} background-color: #fff; {% endcomment %}
+      padding: 10px 0;
+      text-align: left;
+      margin-left: 50px;
+      
+    }
+.dropdown-menu {
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Dropdown button */
+.btn-default {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-default:hover {
+    background-color: #e2e6ea;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+    color: #0056b3;
+}
+
+</style>
+<div class="category-section">
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Category
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+       <li><a href="{% url 'category_view' category_name='fruits' %}">Fruits</a></li>
+        <li><a href="{% url 'category_view' category_name='vegetables' %}">Vegetables</a></li>
+        <li><a href="{% url 'category_view' category_name='packages' %}">Juice</a></li>
+      </ul>
+    </div>
+  </div>
+
+<div class="containerbelownav">
+    <!-- Sidebar for Top Search Products -->
+    <div class="sidebar">
+        <h2>Top Search Products</h2>
+        <ul>
+            {% if top_search_products %}
+                {% for product in top_search_products %}
+                    <li>
+                        <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+                        <a href="{% url 'product_detail' id=product.id %}">
+                            {{ product.name }} ({{ product.search_count }} searches)
+                        </a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No top search products available.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Image Slider -->
+    <div class="image-slider">
+        <div class="slider-wrapper">
+            <div class="slider-item">
+                <img src="{% static 'images/1.jpg' %}" alt="Banner Image 1">
+            </div>
+            <div class="slider-item">
+                <img src="{% static 'images/2.jpg' %}" alt="Banner Image 2">
+            </div>
+            <div class="slider-item">
+                <img src="{% static 'images/3.jpg' %}" alt="Banner Image 3">
+            </div>
+            <div class="slider-item">
+                <img src="{% static 'images/4.jpg' %}" alt="Banner Image 4">
+            </div>
+            <div class="slider-item">
+                <img src="{% static 'images/5.jpg' %}" alt="Banner Image 5">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="categories">
+    {% for category in categories %}
+        <h2>{{ category.name }}</h2>
+        <div class="products-container">
+            <button class="prev-arrow">&#10094;</button>
+            <div class="products">
+                {% for product in products %}
+                    {% if product.category == category %}
+                        <div class="product">
+                            <a href="{% url 'product_detail' product.id %}">
+                                <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+                            </a>
+                            <a href="{% url 'product_detail' product.id %}">
+                                <h3>{{ product.name }}</h3>
+                            </a>
+                            <p class="product-price">Rs {{ product.price }} per unit/kg</p>
+
+                           
+                        <div class="cart-actions">
+    <div class="quantity-selector">
+        <button class="decrease-quantity">-</button>
+        <input type="number" class="quantity" name="quantity" value="1" min="1">
+        <button class="increase-quantity">+</button>
+    </div>
+    <form action="{% url 'add-to-cart' product.id %}" method="post" class="full-width-form">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <input type="hidden" class="hidden-quantity" name="quantity" value="1">
+        <button type="submit" class="add-to-cart full-width-btn">Add to Cart</button>
+    </form>
+</div>
+</div>
+
+                    {% endif %}
+                {% endfor %}
+
+                <!-- View All button -->
+                <div class="product view-all">
+                    <a href="{% url 'category_view' category_name=category.name %}" class="view-all-link">
+                        View All {{ category.name }}
+                    </a>
+                </div>
+            </div>
+            <button class="next-arrow">&#10095;</button>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const quantitySelectors = document.querySelectorAll('.quantity-selector');
+
+    quantitySelectors.forEach(selector => {
+        const quantityInput = selector.querySelector('.quantity');
+        const hiddenQuantityInput = selector.closest('.cart-actions').querySelector('.hidden-quantity');
+        const increaseBtn = selector.querySelector('.increase-quantity');
+        const decreaseBtn = selector.querySelector('.decrease-quantity');
+
+        increaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+            hiddenQuantityInput.value = quantityInput.value;
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                hiddenQuantityInput.value = quantityInput.value;
+            }
+        });
+    });
+
+    // Horizontal scrolling for product categories
+    const categorySections = document.querySelectorAll('.categories .products-container');
+    categorySections.forEach(category => {
+        const prevArrow = category.querySelector('.prev-arrow');
+        const nextArrow = category.querySelector('.next-arrow');
+        const productsContainer = category.querySelector('.products');
+
+        if (prevArrow && nextArrow && productsContainer) {
+            prevArrow.addEventListener('click', function () {
+                productsContainer.scrollBy({
+                    left: -productsContainer.offsetWidth,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextArrow.addEventListener('click', function () {
+                productsContainer.scrollBy({
+                    left: productsContainer.offsetWidth,
+                    behavior: 'smooth'
+                });
+            });
+        } else {
+            console.log('Missing elements in category section');
+        }
+    });
+
+    // Show message if any
+    {% if messages %}
+        {% for message in messages %}
+            alert("{{ message }}");
+        {% endfor %}
+    {% endif %}
+}); 
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sliderWrapper = document.querySelector('.slider-wrapper');
+        const sliderItems = document.querySelectorAll('.slider-item');
+        let index = 0;
+        const totalSlides = sliderItems.length;
+
+        function showSlide() {
+            index = (index + 1) % totalSlides;
+            sliderWrapper.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        // Automatically change slides every 3 seconds
+        setInterval(showSlide, 5000);
+    });
+</script>
+{% endblock content %}
+ 

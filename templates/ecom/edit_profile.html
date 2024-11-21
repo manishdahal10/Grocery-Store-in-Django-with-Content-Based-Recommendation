@@ -1,0 +1,73 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .note {
+      text-align: center;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+    }
+  </style>
+</head>
+
+
+
+<div class="container">
+    <h2>Edit Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            {% render_field userForm.first_name class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            {% render_field userForm.last_name class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            {% render_field userForm.username class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            {% render_field userForm.password class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="mobile">Mobile:</label>
+            {% render_field customerForm.mobile class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            {% render_field customerForm.address class="form-control" %}
+        </div>
+        <div class="form-group">
+            <label for="profile_pic">Profile Picture:</label>
+            {% render_field customerForm.profile_pic class="form-control" %}
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'my-profile' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,33 @@
+<html>
+  {% load static %}
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <title>OGS</title>
+  </head>
+  <body>
+     {% if request.user.is_authenticated %}
+        {% include "ecom/customer_navbar.html" %}
+    {% else %}
+        {% include "ecom/navbar.html" %}
+    {% endif %}
+
+    <!-- content start-->
+    {% block content %} {% endblock content %}
+    <!-- content end-->
+    <br /><br /><br />
+
+   
+  </body>
+  {% include "ecom/footer.html" %}
+</html>

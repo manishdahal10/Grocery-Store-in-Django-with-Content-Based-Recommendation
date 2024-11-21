@@ -1,0 +1,277 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <style>
+        /* General layout for product detail page */
+        .product-detail {
+            max-width: 800px;
+            margin-top: 30px;
+            {% comment %} margin-left:200px; {% endcomment %}
+            margin: 30px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        /* Styling for the product images */
+        .product img {
+            max-width: 600px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Container for the product info (right side) */
+        .product-info {
+            width: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Product name styling */
+        .product-info h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        /* Product description styling */
+.product-description {
+    font-size: 1em;
+    margin-bottom: 20px;
+    white-space: normal;   /* Allows the text to break into multiple lines */
+    word-wrap: break-word; /* Breaks long words if necessary */
+}
+
+
+
+        /* Product price styling */
+        .product-price {
+            font-size: 1.5em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        /* Quantity selector */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-selector button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .quantity-selector input {
+            width: 60px;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Actions (Back link and Add to Cart button) */
+   
+        .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+
+    .back-link,
+.add-to-cart {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 100%; 
+}
+
+
+      .back-link:hover,
+.add-to-cart:hover {
+    background-color: #0056b3;
+}
+
+
+    /* Recommended products section */
+        .recommended-products {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-left:25px;
+        }
+
+        .recommended-products li {
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            width: 200px;
+        }
+
+        .recommended-products img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .recommended-products .rec-product-name {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .recommended-products .rec-product-price {
+            font-size: 1em;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .recommended-products .view-product {
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #28a745;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .recommended-products .view-product:hover {
+            background-color: #218838;
+        }
+        h2{
+            font-size: 30px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    <div class="product-detail">
+        <div class="product">
+            <img src="/{{ product.product_image}}" alt="{{ product.name }}" class="product-image">
+        </div>
+        <div class="product-info">
+            <h1>{{ product.name }}</h1>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">Rs {{ product.price }}</p>
+
+            <!-- Quantity selector with plus/minus buttons -->
+            <div class="quantity-selector">
+                <button id="decrease-quantity">-</button>
+                <input type="number" id="quantity" name="quantity" value="1" min="1">
+                <button id="increase-quantity">+</button>
+            </div>
+
+
+            <div class="actions">
+                {% comment %} <a href="{% url 'home' %}" class="back-link">Back</a> {% endcomment %}
+                <form action="{% url 'add-to-cart' product.id %}" method="post" >
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <input type="hidden" id="hidden-quantity" name="quantity" value="1">
+                    <button type="submit" class="add-to-cart ">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+     {% if recommended_products %}
+        <h2>Similar Products</h2>
+        <ul class="recommended-products">
+            {% for rec_product in recommended_products %}
+                <li>
+                    <img src="{{rec_product.product_image.url}}" alt="{{ rec_product.name }}">
+                    <p class="rec-product-name">{{ rec_product.name }}</p>
+                    <p class="rec-product-price">Rs {{ rec_product.price }}</p>
+                    <a href="{% url 'product_detail' rec_product.id %}" class="view-product">View Product</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommendations available.</p>
+    {% endif %}
+
+    <script>
+        // JavaScript for increment and decrement buttons
+        const quantityInput = document.getElementById('quantity');
+        const hiddenQuantityInput = document.getElementById('hidden-quantity');
+        const increaseBtn = document.getElementById('increase-quantity');
+        const decreaseBtn = document.getElementById('decrease-quantity');
+
+        increaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+            hiddenQuantityInput.value = quantityInput.value;
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                hiddenQuantityInput.value = quantityInput.value;
+            }
+        });
+          // Show message if any
+        {% if messages %}
+            {% for message in messages %}
+                alert("{{ message }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+
+</body>
+</html>
+{% endblock content %}
+
+
+

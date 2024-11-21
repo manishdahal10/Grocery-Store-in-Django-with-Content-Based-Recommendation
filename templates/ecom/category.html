@@ -1,0 +1,246 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* General layout for categories and products */
+
+  .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Adjusted for responsive grid layout */
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+  }
+
+  .product {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s; /* Adds smooth hover effect */
+  }
+
+  .product:hover {
+      transform: scale(1.05); /* Slight zoom on hover for interactivity */
+  }
+
+  {% comment %} .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover; /* Ensures the image fits neatly within the card */
+      border-radius: 5px;
+      margin-bottom: 15px;
+  } {% endcomment %}
+    .product img {
+    width: 100%;           /* Ensures the image takes up the full width of the container */
+    height: 180px;         /* Set a consistent height */
+    object-fit: contain;   /* Show the full image while preserving its aspect ratio */
+    border-radius: 5px;    /* Rounded corners for a nicer look */
+    cursor: pointer;
+    background-color: #f9f9f9;  /* Add a background color to fill the extra space */
+    margin-bottom: 10px;   /* Add space below the image */
+}
+
+  .product h3 {
+      font-size: 1.2em;
+      margin: 10px 0;
+      color: #333;
+      font-weight: bold;
+      cursor: pointer;
+  }
+
+  .product-price {
+      font-size: 1.2em;
+      color: #28a745;
+      margin-bottom: 10px;
+  }
+
+  .cart-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+  }
+
+  .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+
+  .quantity-selector button {
+      padding: 5px 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1em;
+  }
+
+  .quantity-selector input {
+      width: 50px;
+      text-align: center;
+      font-size: 1.1em;
+      border-radius: 3px;
+      border: 1px solid #ddd;
+  }
+
+  .add-to-cart {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      width: 100%;
+  }
+
+  .add-to-cart:hover {
+      background-color: #218838;
+  }
+
+  /* Full width form styling */
+  .full-width-form {
+      width: 100%;
+      display: block;
+  }
+
+  /* Header styling */
+  h1 {
+      text-align: center;
+      font-size: 2em;
+      color: #8393a3;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 20px 0;
+  }
+
+  /* Styling for category section */
+  .category-section {
+      padding: 10px 0;
+      text-align: left;
+      margin-left: 50px;
+  }
+
+  /* Dropdown styling */
+  .dropdown-menu {
+      text-align: center;
+      margin: 0 auto;
+  }
+
+  .btn-default {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+  }
+
+  .btn-default:hover {
+      background-color: #e2e6ea;
+  }
+
+  .dropdown-menu a {
+      color: #007bff;
+      text-decoration: none;
+  }
+
+  .dropdown-menu a:hover {
+      background-color: #f1f1f1;
+      color: #0056b3;
+  }
+</style>
+
+<!-- Category Dropdown -->
+<div class="category-section">
+  <div class="dropdown">
+    <button
+      class="btn btn-default dropdown-toggle"
+      type="button"
+      id="categoryDropdown"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      Select Category
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+      <li><a href="{% url 'category_view' category_name='fruits' %}">Fruits</a></li>
+      <li><a href="{% url 'category_view' category_name='vegetables' %}">Vegetables</a></li>
+      <li><a href="{% url 'category_view' category_name='packages' %}">Packages (Juice)</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Products Section -->
+<h1>{{ category.name }}</h1>
+
+<div class="products">
+  {% for product in products %}
+  <div class="product">
+    <a href="{% url 'product_detail' product.id %}">
+      <img src="{{ product.product_image.url }}" alt="{{ product.name }}" />
+    </a>
+    <a href="{% url 'product_detail' product.id %}">
+      <h3>{{ product.name }}</h3>
+    </a>
+    <p class="product-price">Rs {{ product.price }} per unit/kg</p>
+    <div class="cart-actions">
+      <div class="quantity-selector">
+        <button class="decrease-quantity">-</button>
+        <input type="number" class="quantity" name="quantity" value="1" min="1" />
+        <button class="increase-quantity">+</button>
+      </div>
+      <form action="{% url 'add-to-cart' product.id %}" method="post" class="full-width-form">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}" />
+        <input type="hidden" class="hidden-quantity" name="quantity" value="1" />
+        <button type="submit" class="add-to-cart">Add to Cart</button>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <p>No products available in this category.</p>
+  {% endfor %}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const quantitySelectors = document.querySelectorAll('.quantity-selector');
+
+    quantitySelectors.forEach(selector => {
+        const quantityInput = selector.querySelector('.quantity');
+        const hiddenQuantityInput = selector.closest('.cart-actions').querySelector('.hidden-quantity');
+        const increaseBtn = selector.querySelector('.increase-quantity');
+        const decreaseBtn = selector.querySelector('.decrease-quantity');
+
+        increaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+            hiddenQuantityInput.value = quantityInput.value;
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                hiddenQuantityInput.value = quantityInput.value;
+            }
+        });
+    });
+
+    // Show message if any
+    {% if messages %}
+        {% for message in messages %}
+            alert("{{ message }}");
+        {% endfor %}
+    {% endif %}
+});
+
+</script>
+{% endblock content %}
+
+

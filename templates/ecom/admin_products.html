@@ -1,0 +1,106 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    .float {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      bottom: 60px;
+      right: 60px;
+      background-color: #3eb54d;
+      color: #FFF;
+      border-radius: 50px;
+      text-align: center;
+      box-shadow: 5px 5px 5px #505050;
+    }
+
+    .my-float {
+      margin-top: 22px;
+    }
+
+    .description-content {
+      max-width: 200px; /* Set the maximum width */
+      white-space: nowrap;
+      overflow: hidden; /* Hides the overflow */
+      text-overflow: ellipsis; /* Adds ellipsis (...) for overflow */
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h6 class="panel-title">Total Products</h6>
+    </div>
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Category</th> 
+          <th>Actions</th>
+        </tr>
+      </thead>
+      {% for p in products %}
+        {% if p %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td><img src="/{{ p.product_image}}" alt="Profile Pic" height="40px" width="40px" /></td>
+          <td>Rs {{ p.price }}</td>
+          <td class="description-content">{{ p.description }}</td> <!-- Apply the overflow-hidden style -->
+          <td>{{ p.category.name }}</td> <!-- Display Category Name -->
+          <td>
+            <a class="btn btn-primary btn-xs" href="{% url 'update-product' p.id %}">
+              <span class="glyphicon glyphicon-edit"></span>
+            </a>
+            <a class="btn btn-danger btn-xs" href="{% url 'delete-product' p.id %}" onclick="return confirmDelete();">
+              <span class="glyphicon glyphicon-trash"></span>
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <br><br><br>
+        <h1>No Products!!</h1>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<!-- Add product floating button -->
+<a href="/admin-add-product" class="float">
+  <i class="fa fa-plus my-float"></i>
+</a>
+
+<script>
+  function confirmDelete() {
+    return confirm("Are you sure you want to delete this product?");
+  }
+</script>
+
+{% endblock content %}
+
+
+
+

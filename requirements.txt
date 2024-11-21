@@ -1,0 +1,7 @@
+Django
+scikit-learn
+numpy
+pandas
+setuptools
+django-widget-tweaks
+Pillow

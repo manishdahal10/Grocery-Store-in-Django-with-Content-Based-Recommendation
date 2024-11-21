@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <style media="screen">
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: sans-serif;
+        }
+
+        .box {
+          width: 100%;
+          padding: 40px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          background: #8393a3;
+          text-align: center;
+          transition: 0.25s;
+          margin-top: 80px;
+          border-radius: 20px;
+        }
+        
+        .box input[type="text"]::placeholder,
+        .box input[type="password"]::placeholder {
+          color: #fff;
+          font-weight: bold;
+        }
+
+        .box input[type="text"],
+        .box input[type="password"] {
+          border: 0;
+          background: none;
+          display: block;
+          margin: 20px auto;
+          text-align: center;
+          border: 2px solid #ffffff;
+          padding: 10px 10px;
+          width: 250px;
+          outline: none;
+          color: white;
+          border-radius: 24px;
+          transition: 0.25s;
+          font-weight: bold;
+        }
+
+        .box h1 {
+          color: white;
+          font-weight: 500;
+        }
+
+        .box input[type="text"]:focus,
+        .box input[type="password"]:focus {
+          width: 300px;
+          border-color: #d3d3d3;
+        }
+
+        .box input[type="submit"] {
+          border: 0;
+          background: none;
+          display: block;
+          margin: 20px auto;
+          text-align: center;
+          border: 2px solid #2ecc71;
+          padding: 14px 40px;
+          outline: none;
+          color: white;
+          border-radius: 24px;
+          transition: 0.25s;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        .box input[type="submit"]:hover {
+          background: #2ecc71;
+        }
+
+        .error-message {
+          color: #e74c3c;
+          background: #f8d7da;
+          border: 1px solid #f5c6cb;
+          border-radius: 5px;
+          padding: 10px;
+          margin-top: 10px;
+          font-weight: bold;
+          text-align: center;
+        }
+        
+        .signup-container {
+          margin-top: 10px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #ffffff;
+        }
+        
+        .signup-link {
+          font-size: 18px;
+          font-weight: bold;
+          color: #ffffff;
+          text-decoration: none;
+          margin-left: 10px;
+        }
+
+        .signup-link:hover {
+          text-decoration: underline;
+        }
+    </style>
+  </head>
+  <body>
+    {% include "ecom/navbar.html" %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <form class="box" method="post">
+              {% csrf_token %}
+              <h1>Customer Login</h1>
+              
+              {% if form.non_field_errors %}
+                <div class="error-message">
+                  {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% render_field form.username class="form-control" placeholder="Username" autocomplete="off" %} 
+              {% render_field form.password class="form-control" placeholder="Password" %}
+              <input type="submit" name="" value="Login" />
+              
+              <div class="signup-container">
+                Not registered? <a href="{% url 'customersignup' %}" class="signup-link">Sign up</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br><br>    <br><br><br>    <br><br><br>    <br><br><br>    <br>
+    <br><br><br>    <br><br><br>    <br><br><br>    <br><br><br>    <br>
+     <br><br><br>    <br><br><br>    <br><br><br>    <br><br><br>    <br>
+    
+    {% include "ecom/footer.html" %}
+  </body>
+</html>
+
+    

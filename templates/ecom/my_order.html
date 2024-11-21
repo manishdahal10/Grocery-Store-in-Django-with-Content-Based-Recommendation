@@ -1,0 +1,156 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+
+{% block content %}
+<style media="screen">
+ <style media="screen">
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+body {
+    background-color: #f7f7f7;
+    /* font-family: 'Open Sans', serif */
+}
+
+.container {
+    margin-top: 5px;
+    margin-bottom: 0px
+}
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.10rem
+}
+
+
+  
+.card-header:first-child {
+    border-radius: calc(0.37rem - 1px) calc(0.37rem - 1px) 0 0
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+}
+
+  .error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    text-align: left; /* Align error message to the left */
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .order-list {
+    padding: 0;
+  }
+
+  .order-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .order-item h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .order-item p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+    text-align: left;
+  }
+
+  .order-item h4 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 15px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .order-item ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+  }
+
+  .order-item li {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+  }
+
+  .order-item li strong {
+    font-weight: bold;
+  }
+
+  /* Highlight Status with Light Blue */
+  .order-status {
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: lightblue;
+  }
+
+  hr {
+    border-top: 1px solid #f1f1f1;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container">
+  <header class="card-header" style="text-align:center; font-size: 21px"> My Orders / Tracking </header>
+
+  {% if error %}
+    <p class="error-message">{{ error }}</p>
+  {% else %}
+    <div class="order-list">
+      {% for order_detail in order_details %}
+        <div class="order-item">
+          <h3>Order #{{ order_detail.order.id }} - Date: {{ order_detail.order.order_date }}</h3>
+          <p><strong>Status:</strong> 
+            <span class="order-status">{{ order_detail.order.status }}</span>
+          </p>
+          <p><strong>Address:</strong> {{ order_detail.order.address }}</p>
+          <p><strong>Total Amount:</strong> Rs {{ order_detail.order.total_amount }}</p>
+
+          <h4>Order Items:</h4>
+          <ul>
+            {% for item in order_detail.order_items %}
+              <li>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: Rs {{ item.product.price }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
